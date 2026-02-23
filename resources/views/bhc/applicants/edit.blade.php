@@ -45,12 +45,12 @@
                         @csrf
                         
                         <div class="mb-4 flex items-center">
-                            <input id="ic_card_received" type="checkbox" name="ic_card_received" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ $applicant->ic_card_received ? 'checked' : '' }}>
+                            <input id="ic_card_received" type="checkbox" name="ic_card_received" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ $applicant->ic_received_at ? 'checked' : '' }}>
                             <label for="ic_card_received" class="ml-2 text-sm text-gray-600">{{ __('IC Card Received') }}</label>
                         </div>
 
                         <div class="mb-4 flex items-center">
-                            <input id="insurance_received" type="checkbox" name="insurance_received" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ $applicant->insurance_received ? 'checked' : '' }}>
+                            <input id="insurance_received" type="checkbox" name="insurance_received" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ $applicant->insurance_received_at ? 'checked' : '' }}>
                             <label for="insurance_received" class="ml-2 text-sm text-gray-600">{{ __('Insurance Received') }}</label>
                         </div>
 
@@ -70,7 +70,7 @@
                         <li><strong>Agency:</strong> {{ $applicant->agency_name }}</li>
                         <li><strong>Company:</strong> {{ $applicant->company_name }}</li>
                         <li><strong>Flight Date:</strong> {{ $applicant->flight_date?->format('Y-m-d') }}</li>
-                        <li><strong>Reg Date:</strong> {{ $applicant->registration_date?->format('Y-m-d') ?? 'Pending' }}</li>
+                        <li><strong>Reg Date:</strong> {{ $applicant->registered_at?->format('Y-m-d') ?? 'Pending' }}</li>
                     </ul>
                     <a href="{{ route('bhc.applicants.index') }}" class="mt-4 inline-block text-sm text-blue-600 hover:underline">&larr; Back to List</a>
                 </div>

@@ -38,7 +38,7 @@ class CheckApplicantStatuses extends Command
         }
 
         // 1. IC Card Pending (3 months after flight date)
-        $icCardPendingApplicants = Applicant::where('ic_card_received', false)
+        $icCardPendingApplicants = Applicant::whereNull('ic_received_at')
             ->whereNotNull('flight_date')
             ->whereDate('flight_date', '<=', Carbon::now()->subMonths(3)->toDateString())
             ->get();
@@ -54,9 +54,9 @@ class CheckApplicantStatuses extends Command
         $this->info("Notified BHC Admin about {$icCardPendingApplicants->count()} pending IC cards.");
 
         // 2. Insurance Pending (6 months after registration date)
-        $insurancePendingApplicants = Applicant::where('insurance_received', false)
-            ->whereNotNull('registration_date')
-            ->whereDate('registration_date', '<=', Carbon::now()->subMonths(6)->toDateString())
+        $insurancePendingApplicants = Applicant::whereNull('insurance_received_at')
+            ->whereNotNull('registered_at')
+            ->whereDate('registered_at', '<=', Carbon::now()->subMonths(6)->toDateString())
             ->get();
 
         foreach ($insurancePendingApplicants as $applicant) {

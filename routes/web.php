@@ -16,7 +16,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::middleware(['role:boesl-admin|super-admin'])
+    Route::middleware([\App\Http\Middleware\CheckRole::class . ':boesl-admin|super-admin'])
         ->prefix('boesl')
         ->name('boesl.')
         ->group(function () {
@@ -26,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/applicants/import', [BoeslApplicantController::class, 'import'])->name('applicants.import');
         });
 
-    Route::middleware(['role:bhc-admin|super-admin'])
+    Route::middleware([\App\Http\Middleware\CheckRole::class . ':bhc-admin|super-admin'])
         ->prefix('bhc')
         ->name('bhc.')
         ->group(function () {
@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/applicants/{applicant}/tracking', [BhcApplicantController::class, 'updateTracking'])->name('applicants.updateTracking');
         });
 
-    Route::middleware(['role:super-admin'])
+    Route::middleware([\App\Http\Middleware\CheckRole::class . ':super-admin'])
         ->prefix('super-admin')
         ->name('super-admin.')
         ->group(function () {

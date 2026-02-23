@@ -15,10 +15,10 @@ class DashboardController extends Controller
 
         $stats = [
             'total' => (clone $baseQuery)->count(),
-            'sent_to_bhc' => (clone $baseQuery)->where('status', 'send to bhc-brunei')->count(),
-            'registered' => (clone $baseQuery)->whereNotNull('registration_date')->count(),
-            'ic_received' => (clone $baseQuery)->where('ic_card_received', true)->count(),
-            'insurance_received' => (clone $baseQuery)->where('insurance_received', true)->count(),
+            'sent_to_bhc' => (clone $baseQuery)->where('status', 'sent_to_bhc')->count(),
+            'registered' => (clone $baseQuery)->whereNotNull('registered_at')->count(),
+            'ic_received' => (clone $baseQuery)->whereNotNull('ic_received_at')->count(),
+            'insurance_received' => (clone $baseQuery)->whereNotNull('insurance_received_at')->count(),
         ];
 
         $monthly = Applicant::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total")
