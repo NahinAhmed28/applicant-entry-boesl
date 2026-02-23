@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Applicant extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'bhc_no',
         'applicant_name',
@@ -13,21 +16,20 @@ class Applicant extends Model
         'agency_name',
         'company_name',
         'flight_date',
+        'created_by',
         'status',
         'phone_number',
         'registration_no',
-        'registration_date',
-        'ic_card_received',
-        'insurance_received',
+        'registered_at',
+        'ic_received_at',
+        'insurance_received_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'flight_date' => 'date',
-            'registration_date' => 'date',
-            'ic_card_received' => 'boolean',
-            'insurance_received' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'flight_date' => 'datetime',
+        'registered_at' => 'datetime',
+        'ic_received_at' => 'datetime',
+        'insurance_received_at' => 'datetime',
+    ];
 }
+?>
