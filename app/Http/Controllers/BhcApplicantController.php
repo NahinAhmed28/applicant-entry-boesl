@@ -32,11 +32,10 @@ class BhcApplicantController extends Controller
 
     public function markRegistered(Applicant $applicant)
     {
-        if (!$applicant->registration_date) {
-            $applicant->update([
-                'registration_date' => now(),
-            ]);
-        }
+        $applicant->update([
+            'registration_date' => $applicant->registration_date ?? now(),
+            'status' => 'registered',
+        ]);
 
         return redirect()->back()->with('success', 'Applicant marked as registered.');
     }
