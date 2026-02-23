@@ -10,10 +10,31 @@ use App\Imports\ApplicantsImport;
 
 class BoeslApplicantController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Boesl admin can view their own submissions
-        $applicants = Applicant::where('created_by', auth()->id())->get();
+        $applicants = Applicant::query()
+            ->where('created_by', auth()->id())
+            ->when($request->filled('bhc_no'), fn ($q) => $q->where('bhc_no', 'like', '%' . $request->string('bhc_no')->trim() . '%'))
+            ->when($request->filled('applicant_name'), fn ($q) => $q->where('applicant_name', 'like', '%' . $request->string('applicant_name')->trim() . '%'))
+            ->when($request->filled('passport_no'), fn ($q) => $q->where('passport_no', 'like', '%' . $request->string('passport_no')->trim() . '%'))
+            ->when($request->filled('flight_date'), fn ($q) => $q->whereDate('flight_date', $request->string('flight_date')->toString()))
+            ->when($request->filled('status'), fn ($q) => $q->where('status', 'like', '%' . $request->string('status')->trim() . '%'))
+            ->when($request->filled('registered_at'), fn ($q) => $q->whereDate('registered_at', $request->string('registered_at')->toString()))
+            ->when($request->filled('ic_ins'), function ($q) use ($request) {
+                return match ($request->string('ic_ins')->toString()) {
+                    'ic_received' => $q->whereNotNull('ic_received_at'),
+                    'ic_pending' => $q->whereNull('ic_received_at'),
+                    'ins_received' => $q->whereNotNull('insurance_received_at'),
+                    'ins_pending' => $q->whereNull('insurance_received_at'),
+                    'both_received' => $q->whereNotNull('ic_received_at')->whereNotNull('insurance_received_at'),
+                    'both_pending' => $q->whereNull('ic_received_at')->whereNull('insurance_received_at'),
+                    default => $q,
+                };
+            })
+            ->latest()
+            ->get();
+
         return view('boesl.applicants.index', compact('applicants'));
     }
 
