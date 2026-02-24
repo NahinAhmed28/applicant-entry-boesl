@@ -7,14 +7,14 @@
 
     <div class="py-6 lg:py-8">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6" x-data="{ inputMode: 'none', fileName: '' }">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6" x-data="{ inputMode: '{{ session('input_mode', 'none') }}', fileName: '' }">
                 <div class="p-4 sm:p-6 text-gray-900">
                     <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                        <button @click="inputMode = 'single'" :class="inputMode === 'single' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-3 px-4 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2">
+                        <button @click="inputMode = 'single'" :class="inputMode === 'single' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'" class="flex-1 py-3 px-4 rounded-lg font-bold transition-all duration-200 flex items-center justify-center gap-2">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                             Single Input
                         </button>
-                        <button @click="inputMode = 'batch'" :class="inputMode === 'batch' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-3 px-4 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2">
+                        <button @click="inputMode = 'batch'" :class="inputMode === 'batch' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'" class="flex-1 py-3 px-4 rounded-lg font-bold transition-all duration-200 flex items-center justify-center gap-2">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                             Batch Input
                         </button>
@@ -27,19 +27,19 @@
                         </a>
                     </div>
 
-                    <div x-show="inputMode === 'batch'" x-cloak x-transition class="p-4 border border-green-100 bg-green-50 rounded-lg">
+                    <div x-show="inputMode === 'batch'" x-cloak x-transition class="p-4 border border-green-200 bg-green-100 rounded-lg">
                         <form action="{{ route('boesl.applicants.import') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="flex flex-col gap-3">
                                 <div class="flex flex-col sm:flex-row items-center gap-3">
                                     <div class="relative w-full">
                                         <input type="file" name="excel_file" id="excel_file" class="hidden" @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''" accept=".xlsx,.csv" />
-                                        <label for="excel_file" class="cursor-pointer flex items-center justify-between w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-sm hover:border-green-500 transition-colors">
-                                            <span x-text="fileName || 'Select Excel/CSV file...'" class="text-gray-600 truncate mr-2"></span>
-                                            <span class="bg-gray-100 px-2 py-1 rounded text-xs text-gray-500">Browse</span>
+                                        <label for="excel_file" class="cursor-pointer flex items-center justify-between w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-sm hover:border-green-500 transition-colors shadow-sm">
+                                            <span x-text="fileName || 'Select Excel/CSV file...'" class="text-gray-600 truncate mr-2 font-medium"></span>
+                                            <span class="bg-gray-100 px-3 py-1 rounded-md text-xs text-gray-700 font-bold border border-gray-200">Browse</span>
                                         </label>
                                     </div>
-                                    <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 whitespace-nowrap flex items-center justify-center gap-2">
+                                    <button type="submit" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-extrabold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap flex items-center justify-center gap-2">
                                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                         </svg>

@@ -74,16 +74,16 @@ class BoeslApplicantController extends Controller
 
         try {
             Excel::import(new ApplicantsImport, $request->file('excel_file'));
-            return Redirect::back()->with('success', 'Excel imported successfully.');
+            return Redirect::back()->with('success', 'Excel imported successfully.')->with('input_mode', 'batch');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             $errors = [];
             foreach ($failures as $failure) {
                 $errors[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
             }
-            return Redirect::back()->withErrors(['excel_file' => $errors]);
+            return Redirect::back()->withErrors(['excel_file' => $errors])->with('input_mode', 'batch');
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['excel_file' => 'There was an error importing the file: ' . $e->getMessage()]);
+            return Redirect::back()->withErrors(['excel_file' => 'There was an error importing the file: ' . $e->getMessage()])->with('input_mode', 'batch');
         }
     }
 
