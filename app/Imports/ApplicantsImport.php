@@ -24,10 +24,20 @@ class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation
                 if (is_numeric($rawDate)) {
                     $flightDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($rawDate)->format('Y-m-d');
                 } else {
-                    $flightDate = date('Y-m-d', strtotime($rawDate));
+                    // Force strict Y-m-d check if not a spreadsheet date object
+                    $d = \DateTime::createFromFormat('Y-m-d', $rawDate);
+                    if ($d && $d->format('Y-m-d') === $rawDate) {
+                        $flightDate = $rawDate;
+                    } else {
+                        // Try fallback if strtotime works but it's not a random string
+                        $timestamp = strtotime($rawDate);
+                        if ($timestamp && $timestamp > 0) {
+                            $flightDate = date('Y-m-d', $timestamp);
+                        }
+                    }
                 }
             } catch (\Exception $e) {
-                // Ignore or log error
+                $flightDate = null;
             }
         }
 
@@ -46,12 +56,32 @@ class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'bhc_no' => 'required',
-            'applicant_name' => 'required',
-            'passport_no' => 'required',
-            'agency_name' => 'required',
-            'company_name' => 'required',
-            'flight_date_y_m_d' => 'required',
+            'bhc_no' => 'required|string',
+            'applicant_name' => 'required|string',
+            'passport_no' => 'required|string',
+            'agency_name' => 'required|string',
+            'company_name' => 'required|string',
+            'flight_date_y_m_d' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (is_numeric($value)) {
+                        try {
+                            \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
+                        } catch (\Exception $e) {
+                            $fail('The ' . $attribute . ' is not a valid Excel date.');
+                        }
+                    } else {
+                        $d = \DateTime::createFromFormat('Y-m-d', $value);
+                        if (!($d && $d->format('Y-m-d') === $value)) {
+                            // Try strtotime as fallback but only if it results in a sane date
+                            $ts = strtotime($value);
+                            if (!$ts || $ts <= 0) {
+                                $fail('The ' . $attribute . ' must be in Y-m-d format (e.g. 2024-12-31).');
+                            }
+                        }
+                    }
+                },
+            ],
         ];
     }
 

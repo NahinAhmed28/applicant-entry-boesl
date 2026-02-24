@@ -17,8 +17,17 @@ class ApplicantsExport implements FromCollection, WithHeadings, WithStyles, With
     */
     public function collection()
     {
-        // Return an empty collection as this is a template
-        return new Collection([]);
+        // Return a collection with one example row to show formatting
+        return new Collection([
+            [
+                'Example-001',
+                'John Doe',
+                'A1234567',
+                'Trustworthy Agency',
+                'Tech Corp',
+                '2024-12-31',
+            ]
+        ]);
     }
 
     public function headings(): array

@@ -14,6 +14,8 @@ class BoeslApplicantController extends Controller
     public function index(Request $request)
     {
         // Boesl admin can view their own submissions
+        $perPage = $request->integer('per_page', 10);
+        
         $applicants = Applicant::query()
             ->where('created_by', auth()->id())
             ->when($request->filled('bhc_no'), fn ($q) => $q->where('bhc_no', 'like', '%' . $request->string('bhc_no')->trim() . '%'))
@@ -34,7 +36,8 @@ class BoeslApplicantController extends Controller
                 };
             })
             ->latest()
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
 
         return view('boesl.applicants.index', compact('applicants'));
     }

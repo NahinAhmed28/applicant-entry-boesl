@@ -9,6 +9,8 @@ class BhcApplicantController extends Controller
 {
     public function index(Request $request)
     {
+        $perPage = $request->integer('per_page', 10);
+
         $applicants = Applicant::query()
             ->when($request->filled('bhc_no'), fn ($q) => $q->where('bhc_no', 'like', '%' . $request->string('bhc_no')->trim() . '%'))
             ->when($request->filled('applicant_name'), fn ($q) => $q->where('applicant_name', 'like', '%' . $request->string('applicant_name')->trim() . '%'))
@@ -28,7 +30,8 @@ class BhcApplicantController extends Controller
                 };
             })
             ->latest()
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
 
         return view('bhc.applicants.index', compact('applicants'));
     }

@@ -39,8 +39,11 @@
                                             <span class="bg-gray-100 px-2 py-1 rounded text-xs text-gray-500">Browse</span>
                                         </label>
                                     </div>
-                                    <button type="submit" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded transition-colors whitespace-nowrap">
-                                        Upload Excel
+                                    <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 whitespace-nowrap flex items-center justify-center gap-2">
+                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        Upload Excel Data
                                     </button>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -111,52 +114,71 @@
                         </div>
                     </form>
 
-                    <div class="overflow-x-auto">
-                    <table class="min-w-[1080px] w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BHC No</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passport</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agency / Company</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flight Date</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reg. Date</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IC / Ins</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($applicants as $applicant)
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-4 sm:p-6 text-gray-900 border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                            <h3 class="text-lg font-bold text-gray-800">Submitted Applicants</h3>
+                            
+                            <!-- Entries per page -->
+                            <div class="flex items-center gap-2">
+                                <label for="per_page" class="text-sm font-medium text-gray-700">Show</label>
+                                <form action="{{ route('boesl.applicants.index') }}" method="GET" x-data x-ref="perPageForm">
+                                    @foreach(request()->except('per_page', 'page') as $key => $value)
+                                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                    @endforeach
+                                    <select 
+                                        name="per_page" 
+                                        id="per_page" 
+                                        @change="$refs.perPageForm.submit()"
+                                        class="text-sm rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 py-1"
+                                    >
+                                        @foreach([10, 25, 50, 100] as $val)
+                                            <option value="{{ $val }}" @selected(request('per_page', 10) == $val)>{{ $val }}</option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                                <span class="text-sm font-medium text-gray-700">entries</span>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50 text-gray-700">
                                 <tr>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $applicant->bhc_no }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->applicant_name }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->passport_no }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div class="font-medium text-gray-900">{{ $applicant->agency_name }}</div>
-                                        <div class="text-xs text-gray-500">{{ $applicant->company_name }}</div>
-                                    </td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->flight_date?->format('Y-m-d') }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            {{ str_replace('_', ' ', $applicant->status) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->registered_at?->format('Y-m-d') ?? 'Pending' }}</td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div class="flex items-center gap-2">
-                                            <span class="px-2 py-1 text-xs rounded {{ $applicant->ic_received_at ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}" title="IC Card">IC</span>
-                                            <span class="px-2 py-1 text-xs rounded {{ $applicant->insurance_received_at ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}" title="Insurance">Ins</span>
-                                        </div>
-                                    </td>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">BHC No</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Applicant Info</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Agency / Company</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Flight Date</th>
                                 </tr>
-                            @endforeach
-                            @if($applicants->isEmpty())
-                                <tr>
-                                    <td colspan="8" class="px-4 py-4 text-center text-sm text-gray-500">No applicants found.</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($applicants as $applicant)
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $applicant->bhc_no }}</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-semibold text-gray-900">{{ $applicant->applicant_name }}</div>
+                                            <div class="text-xs text-gray-500 font-medium">{{ $applicant->passport_no }}</div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900 font-medium">{{ $applicant->agency_name }}</div>
+                                            <div class="text-xs text-gray-500">{{ $applicant->company_name }}</div>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{{ $applicant->flight_date?->format('Y-M-d') }}</td>
+                                    </tr>
+                                @endforeach
+                                @if($applicants->isEmpty())
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500">No applicants found.</td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                        </div>
+
+                        @if($applicants->hasPages())
+                            <div class="p-4 border-t border-gray-100">
+                                {{ $applicants->links() }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

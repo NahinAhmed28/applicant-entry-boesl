@@ -102,17 +102,15 @@
             </aside>
 
             <div :class="collapsed ? 'lg:ml-20' : 'lg:ml-64'" class="flex-1 transition-all duration-200">
-                <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 lg:px-6">
+                <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 lg:px-6 sticky top-0 z-20">
                     <div class="flex items-center gap-4">
-                        <button @click="sidebarOpen = true" class="lg:hidden text-gray-500 hover:text-gray-700" title="Open sidebar">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                        </button>
-                        <button @click="collapsed = !collapsed" class="hidden lg:block text-gray-500 hover:text-gray-700" title="Toggle Sidebar">
+                        <!-- Sidebar Toggle - Visible for all screen sizes -->
+                        <button @click="if (window.innerWidth < 1024) { sidebarOpen = true } else { collapsed = !collapsed }" class="p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none" title="Toggle Sidebar">
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path x-show="!collapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7m0 0l7-7m-7 7h18" />
-                                <path x-show="collapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7m0 0l-7 7m7-7H6" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
+                        
                         <div class="font-semibold text-slate-700">
                             @isset($header)
                                 {{ $header }}
@@ -121,7 +119,12 @@
                             @endisset
                         </div>
                     </div>
-                    <div class="text-sm text-slate-500">{{ auth()->user()->name }}</div>
+                    <div class="flex items-center gap-4">
+                        <div class="hidden sm:block text-sm text-slate-500 font-medium">{{ auth()->user()->name }}</div>
+                        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs uppercase">
+                            {{ substr(auth()->user()->name, 0, 1) }}
+                        </div>
+                    </div>
                 </header>
 
                 <main class="p-3 sm:p-4 lg:p-6">{{ $slot }}</main>
