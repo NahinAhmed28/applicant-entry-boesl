@@ -27,7 +27,7 @@ class ApplicantsSeeder extends Seeder
                 'agency_name' => 'Global Workforce Solutions',
                 'company_name' => 'Royal Brunei Airlines',
                 'flight_date' => now()->addDays(30),
-                'status' => 'pending',
+                'status' => 'sent_to_bhc',
                 'created_by' => $boeslAdmin?->id,
             ],
             [
@@ -38,7 +38,7 @@ class ApplicantsSeeder extends Seeder
                 'agency_name' => 'Asia Pacific Recruitment',
                 'company_name' => 'Brunei Shell Petroleum',
                 'flight_date' => now()->addDays(25),
-                'status' => 'pending',
+                'status' => 'sent_to_bhc',
                 'created_by' => $boeslAdmin?->id,
             ],
             [
@@ -49,7 +49,7 @@ class ApplicantsSeeder extends Seeder
                 'agency_name' => 'Premier Manpower Agency',
                 'company_name' => 'Brunei Energy Exploration',
                 'flight_date' => now()->addDays(35),
-                'status' => 'pending',
+                'status' => 'sent_to_bhc',
                 'created_by' => $boeslAdmin?->id,
             ],
             [

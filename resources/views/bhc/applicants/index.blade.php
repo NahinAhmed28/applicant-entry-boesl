@@ -28,7 +28,13 @@
                             <input type="text" name="applicant_name" value="{{ request('applicant_name') }}" placeholder="Name" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                             <input type="text" name="passport_no" value="{{ request('passport_no') }}" placeholder="Passport" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                             <input type="date" name="flight_date" value="{{ request('flight_date') }}" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                            <input type="text" name="status" value="{{ request('status') }}" placeholder="Status" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            <select name="status" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Status (Any)</option>
+                                <option value="sent_to_bhc" @selected(request('status') === 'sent_to_bhc')>Sent to BHC</option>
+                                <option value="registered" @selected(request('status') === 'registered')>Registered</option>
+                                <option value="ic_received" @selected(request('status') === 'ic_received')>IC Received</option>
+                                <option value="insurance_received" @selected(request('status') === 'insurance_received')>Insurance Received</option>
+                            </select>
                             <input type="date" name="registered_at" value="{{ request('registered_at') }}" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                             <select name="ic_ins" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">IC / Ins. (Any)</option>
@@ -53,6 +59,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">BHC No</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passport</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agency / Company</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flight Date</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reg. Date</th>
@@ -66,10 +73,14 @@
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $applicant->bhc_no }}</td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->applicant_name }}<br><small>{{ $applicant->phone_number }}</small></td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->passport_no }}</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div class="font-medium text-gray-900">{{ $applicant->agency_name }}</div>
+                                        <div class="text-xs text-gray-500">{{ $applicant->company_name }}</div>
+                                    </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{{ $applicant->flight_date?->format('Y-m-d') }}</td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            {{ $applicant->status }}
+                                            {{ str_replace('_', ' ', $applicant->status) }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">

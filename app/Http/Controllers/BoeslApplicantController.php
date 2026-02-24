@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ApplicantsImport;
+use App\Exports\ApplicantsExport;
 
 class BoeslApplicantController extends Controller
 {
@@ -67,9 +68,25 @@ class BoeslApplicantController extends Controller
         $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,csv',
         ]);
-        // Simple import using maatwebsite/excel package
-        Excel::import(new ApplicantsImport, $request->file('excel_file'));
-        return Redirect::back()->with('success', 'Excel imported successfully.');
+
+        try {
+            Excel::import(new ApplicantsImport, $request->file('excel_file'));
+            return Redirect::back()->with('success', 'Excel imported successfully.');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errors = [];
+            foreach ($failures as $failure) {
+                $errors[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
+            }
+            return Redirect::back()->withErrors(['excel_file' => $errors]);
+        } catch (\Exception $e) {
+            return Redirect::back()->withErrors(['excel_file' => 'There was an error importing the file: ' . $e->getMessage()]);
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new ApplicantsExport, 'applicant_template.xlsx');
     }
 }
 ?>

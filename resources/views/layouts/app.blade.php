@@ -33,10 +33,11 @@
                 ]"
                 class="bg-slate-900 text-slate-100 w-72 fixed inset-y-0 left-0 z-40 transform transition-all duration-200 ease-out">
                 <div class="h-16 flex items-center justify-between px-4 border-b border-slate-800">
-                    <span x-show="!collapsed" x-cloak class="font-semibold">Brunei Worker Management</span>
-                    <span x-show="collapsed" x-cloak class="hidden lg:inline text-lg font-semibold">B</span>
-                    <button @click="collapsed = !collapsed" class="hidden lg:inline text-xs bg-slate-800 px-2 py-1 rounded" title="Toggle sidebar">[]</button>
-                    <button @click="sidebarOpen = false" class="lg:hidden text-lg" title="Close sidebar">X</button>
+                    <span x-show="!collapsed" x-cloak class="font-semibold px-2">Brunei Worker Management</span>
+                    <span x-show="collapsed" x-cloak class="hidden lg:inline text-lg font-semibold px-2">B</span>
+                    <button @click="sidebarOpen = false" class="lg:hidden text-lg" title="Close sidebar">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
                 </div>
 
                 <nav class="p-3 space-y-1 text-sm">
@@ -102,13 +103,23 @@
 
             <div :class="collapsed ? 'lg:ml-20' : 'lg:ml-64'" class="flex-1 transition-all duration-200">
                 <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 lg:px-6">
-                    <button @click="sidebarOpen = true" class="lg:hidden text-sm font-medium px-2 py-1 rounded border border-slate-300" title="Open sidebar">Menu</button>
-                    <div class="font-semibold text-slate-700">
-                        @isset($header)
-                            {{ $header }}
-                        @else
-                            Dashboard
-                        @endisset
+                    <div class="flex items-center gap-4">
+                        <button @click="sidebarOpen = true" class="lg:hidden text-gray-500 hover:text-gray-700" title="Open sidebar">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        </button>
+                        <button @click="collapsed = !collapsed" class="hidden lg:block text-gray-500 hover:text-gray-700" title="Toggle Sidebar">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path x-show="!collapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7m0 0l7-7m-7 7h18" />
+                                <path x-show="collapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7m0 0l-7 7m7-7H6" />
+                            </svg>
+                        </button>
+                        <div class="font-semibold text-slate-700">
+                            @isset($header)
+                                {{ $header }}
+                            @else
+                                Dashboard
+                            @endisset
+                        </div>
                     </div>
                     <div class="text-sm text-slate-500">{{ auth()->user()->name }}</div>
                 </header>

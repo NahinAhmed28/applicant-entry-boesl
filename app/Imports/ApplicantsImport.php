@@ -5,8 +5,9 @@ namespace App\Imports;
 use App\Models\Applicant;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ApplicantsImport implements ToModel, WithHeadingRow
+class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation
 {
     /**
     * @param array $row
@@ -15,14 +16,9 @@ class ApplicantsImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
-        // Headers after slugification by Laravel Excel:
-        $bhcNo = $row['bhc_no'] ?? $row['bhc_no_'] ?? null;
-        if (empty($bhcNo)) {
-            return null;
-        }
-
         $flightDate = null;
-        $rawDate = $row['applicant_flight_date'] ?? $row['flight_date'] ?? null;
+        $rawDate = $row['flight_date_y_m_d'] ?? $row['flight_date'] ?? $row['applicant_flight_date'] ?? null;
+        
         if (!empty($rawDate)) {
             try {
                 if (is_numeric($rawDate)) {
@@ -36,13 +32,38 @@ class ApplicantsImport implements ToModel, WithHeadingRow
         }
 
         return new Applicant([
-            'bhc_no' => $bhcNo,
-            'applicant_name' => $row['applicant_name'] ?? '',
-            'passport_no' => $row['passport_no'] ?? '',
-            'agency_name' => $row['agency_name'] ?? '',
-            'company_name' => $row['company_name'] ?? '',
+            'bhc_no' => $row['bhc_no'],
+            'applicant_name' => $row['applicant_name'],
+            'passport_no' => $row['passport_no'],
+            'agency_name' => $row['agency_name'],
+            'company_name' => $row['company_name'],
             'flight_date' => $flightDate,
-            'status' => 'send to bhc-brunei',
+            'status' => 'sent_to_bhc',
+            'created_by' => auth()->id(),
         ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'bhc_no' => 'required',
+            'applicant_name' => 'required',
+            'passport_no' => 'required',
+            'agency_name' => 'required',
+            'company_name' => 'required',
+            'flight_date_y_m_d' => 'required',
+        ];
+    }
+
+    public function prepareForValidation($data, $index)
+    {
+        // Handle variations in header slugification
+        if (isset($data['flight_date_y_m_d'])) {
+             // Already correct
+        } elseif (isset($data['flight_date'])) {
+            $data['flight_date_y_m_d'] = $data['flight_date'];
+        }
+        
+        return $data;
     }
 }

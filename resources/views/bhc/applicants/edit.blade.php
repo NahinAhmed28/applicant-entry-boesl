@@ -1,12 +1,26 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Applicant: ') }} {{ $applicant->applicant_name }}
-        </h2>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('bhc.applicants.index') }}" class="text-gray-400 hover:text-gray-600 transition-colors" title="Back to List">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Edit Applicant: ') }} {{ $applicant->applicant_name }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col md:flex-row gap-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+            
+            <div class="flex flex-col md:flex-row gap-6">
             
             <!-- Edit Basic Info (Phone, Reg No) -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg w-full md:w-1/2">

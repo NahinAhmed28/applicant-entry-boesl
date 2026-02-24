@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/applicants', [BoeslApplicantController::class, 'index'])->name('applicants.index');
             Route::get('/applicants/create', [BoeslApplicantController::class, 'create'])->name('applicants.create');
             Route::post('/applicants', [BoeslApplicantController::class, 'store'])->name('applicants.store');
+            Route::get('/applicants/template', [BoeslApplicantController::class, 'downloadTemplate'])->name('applicants.template');
             Route::post('/applicants/import', [BoeslApplicantController::class, 'import'])->name('applicants.import');
         });
 
