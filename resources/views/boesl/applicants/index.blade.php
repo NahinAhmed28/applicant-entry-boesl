@@ -75,7 +75,7 @@
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg" x-data="{ filterOpen: {{ request()->hasAny(['bhc_no', 'applicant_name', 'passport_no', 'flight_date', 'status', 'registered_at', 'ic_ins']) ? 'true' : 'false' }} }">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg" x-data="{ filterOpen: {{ request()->hasAny(['bhc_no', 'applicant_name', 'passport_no', 'flight_date', 'agency_name', 'company_name']) ? 'true' : 'false' }} }">
                 <div class="p-4 sm:p-6 text-gray-900">
                     <div class="mb-4 flex items-center justify-between gap-3">
                         <h3 class="text-base font-semibold text-slate-700">Applicants</h3>
@@ -85,31 +85,37 @@
                     </div>
 
                     <form method="GET" action="{{ route('boesl.applicants.index') }}" x-show="filterOpen" x-cloak class="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-3 sm:p-4">
-                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                            <input type="text" name="bhc_no" value="{{ request('bhc_no') }}" placeholder="BHC No" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                            <input type="text" name="applicant_name" value="{{ request('applicant_name') }}" placeholder="Name" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                            <input type="text" name="passport_no" value="{{ request('passport_no') }}" placeholder="Passport" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                            <input type="date" name="flight_date" value="{{ request('flight_date') }}" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                            <select name="status" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                                <option value="">Status (Any)</option>
-                                <option value="sent_to_bhc" @selected(request('status') === 'sent_to_bhc')>Sent to BHC</option>
-                                <option value="registered" @selected(request('status') === 'registered')>Registered</option>
-                                <option value="ic_received" @selected(request('status') === 'ic_received')>IC Received</option>
-                                <option value="insurance_received" @selected(request('status') === 'insurance_received')>Insurance Received</option>
-                            </select>
-                            <input type="date" name="registered_at" value="{{ request('registered_at') }}" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                            <select name="ic_ins" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                                <option value="">IC / Ins. (Any)</option>
-                                <option value="ic_received" @selected(request('ic_ins') === 'ic_received')>IC Received</option>
-                                <option value="ic_pending" @selected(request('ic_ins') === 'ic_pending')>IC Pending</option>
-                                <option value="ins_received" @selected(request('ic_ins') === 'ins_received')>Ins. Received</option>
-                                <option value="ins_pending" @selected(request('ic_ins') === 'ins_pending')>Ins. Pending</option>
-                                <option value="both_received" @selected(request('ic_ins') === 'both_received')>Both Received</option>
-                                <option value="both_pending" @selected(request('ic_ins') === 'both_pending')>Both Pending</option>
-                            </select>
-                            <div class="flex items-center gap-2">
-                                <button type="submit" class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">Search</button>
-                                <a href="{{ route('boesl.applicants.index') }}" class="inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white">Reset</a>
+                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                            <div>
+                                <label for="bhc_no" class="block text-xs font-medium text-slate-500 mb-1">Entry Permit No (BHC No)</label>
+                                <input type="text" name="bhc_no" id="bhc_no" value="{{ request('bhc_no') }}" placeholder="Search BHC No..." class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="applicant_name" class="block text-xs font-medium text-slate-500 mb-1">Applicant Name</label>
+                                <input type="text" name="applicant_name" id="applicant_name" value="{{ request('applicant_name') }}" placeholder="Search Name..." class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="passport_no" class="block text-xs font-medium text-slate-500 mb-1">Passport Number</label>
+                                <input type="text" name="passport_no" id="passport_no" value="{{ request('passport_no') }}" placeholder="Search Passport..." class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="agency_name" class="block text-xs font-medium text-slate-500 mb-1">Agency Name</label>
+                                <input type="text" name="agency_name" id="agency_name" value="{{ request('agency_name') }}" placeholder="Search Agency..." class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="company_name" class="block text-xs font-medium text-slate-500 mb-1">Company Name</label>
+                                <input type="text" name="company_name" id="company_name" value="{{ request('company_name') }}" placeholder="Search Company..." class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="flight_date" class="block text-xs font-medium text-slate-500 mb-1">Flight Date</label>
+                                <input type="date" name="flight_date" id="flight_date" value="{{ request('flight_date') }}" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div class="flex items-end gap-2 xl:col-span-3">
+                                <button type="submit" class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 shadow-sm">
+                                    <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                    Search
+                                </button>
+                                <a href="{{ route('boesl.applicants.index') }}" class="inline-flex items-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 shadow-sm">Reset</a>
                             </div>
                         </div>
                     </form>

@@ -22,6 +22,8 @@ class BoeslApplicantController extends Controller
             ->when($request->filled('applicant_name'), fn ($q) => $q->where('applicant_name', 'like', '%' . $request->string('applicant_name')->trim() . '%'))
             ->when($request->filled('passport_no'), fn ($q) => $q->where('passport_no', 'like', '%' . $request->string('passport_no')->trim() . '%'))
             ->when($request->filled('flight_date'), fn ($q) => $q->whereDate('flight_date', $request->string('flight_date')->toString()))
+            ->when($request->filled('agency_name'), fn ($q) => $q->where('agency_name', 'like', '%' . $request->string('agency_name')->trim() . '%'))
+            ->when($request->filled('company_name'), fn ($q) => $q->where('company_name', 'like', '%' . $request->string('company_name')->trim() . '%'))
             ->when($request->filled('status'), fn ($q) => $q->where('status', 'like', '%' . $request->string('status')->trim() . '%'))
             ->when($request->filled('registered_at'), fn ($q) => $q->whereDate('registered_at', $request->string('registered_at')->toString()))
             ->when($request->filled('ic_ins'), function ($q) use ($request) {
