@@ -153,6 +153,7 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">BHC No</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Applicant Info</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Agency / Company</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Flight Date</th>
                                 </tr>
                             </thead>
@@ -168,12 +169,15 @@
                                             <div class="text-sm text-gray-900 font-medium">{{ $applicant->agency_name }}</div>
                                             <div class="text-xs text-gray-500">{{ $applicant->company_name }}</div>
                                         </td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="text-sm font-semibold text-blue-600">Send to BHC Brunei</span>
+                                        </td>
                                         <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{{ $applicant->flight_date?->format('Y-M-d') }}</td>
                                     </tr>
                                 @endforeach
                                 @if($applicants->isEmpty())
                                     <tr>
-                                        <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500">No applicants found.</td>
+                                        <td colspan="5" class="px-4 py-4 text-center text-sm text-gray-500">No applicants found.</td>
                                     </tr>
                                 @endif
                             </tbody>

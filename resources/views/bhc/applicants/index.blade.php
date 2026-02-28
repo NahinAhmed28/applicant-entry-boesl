@@ -30,7 +30,7 @@
                             <input type="date" name="flight_date" value="{{ request('flight_date') }}" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                             <select name="status" class="w-full rounded-md border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Status (Any)</option>
-                                <option value="sent_to_bhc" @selected(request('status') === 'sent_to_bhc')>Sent to BHC</option>
+                                <option value="sent_to_bhc" @selected(request('status') === 'sent_to_bhc')>Pending</option>
                                 <option value="registered" @selected(request('status') === 'registered')>Registered</option>
                                 <option value="ic_received" @selected(request('status') === 'ic_received')>IC Received</option>
                                 <option value="insurance_received" @selected(request('status') === 'insurance_received')>Insurance Received</option>
@@ -109,8 +109,17 @@
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{{ $applicant->flight_date?->format('Y-M-d') }}</td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span class="px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 border border-blue-200 uppercase tracking-tight">
-                                            {{ str_replace('_', ' ', $applicant->status) }}
+                                        @php
+                                            $statusConfig = [
+                                                'sent_to_bhc' => ['label' => 'Pending', 'class' => 'bg-red-100 text-red-700 border-red-200'],
+                                                'registered' => ['label' => 'Registered', 'class' => 'bg-green-100 text-green-700 border-green-200'],
+                                                'ic_received' => ['label' => 'IC Received', 'class' => 'bg-blue-100 text-blue-800 border-blue-200'],
+                                                'insurance_received' => ['label' => 'Insurance Received', 'class' => 'bg-orange-100 text-orange-700 border-orange-200'],
+                                            ];
+                                            $config = $statusConfig[$applicant->status] ?? ['label' => str_replace('_', ' ', $applicant->status), 'class' => 'bg-gray-100 text-gray-800 border-gray-200'];
+                                        @endphp
+                                        <span class="px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full {{ $config['class'] }} border uppercase tracking-tight">
+                                            {{ $config['label'] }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
