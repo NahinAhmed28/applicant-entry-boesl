@@ -44,6 +44,17 @@ Route::middleware(['auth'])->group(function () {
         ->group(function () {
             Route::resource('users', UserManagementController::class)->except('show');
         });
+
+    Route::post('/notifications/{id}/read', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        
+        if (isset($notification->data['applicant_id'])) {
+            return redirect()->route('bhc.applicants.edit', $notification->data['applicant_id']);
+        }
+        
+        return redirect()->route('dashboard');
+    })->name('notifications.read');
 });
 
 require __DIR__.'/auth.php';

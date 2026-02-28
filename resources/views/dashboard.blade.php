@@ -113,7 +113,7 @@
                     </div>
                 @else
                     <!-- Quick Action for BOESL Admin instead of Stats -->
-                    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-lg p-6 text-white overflow-hidden relative">
+                    <!-- <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-lg p-6 text-white overflow-hidden relative">
                         <div class="absolute -right-10 -bottom-10 opacity-10">
                             <svg class="h-40 w-40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                         </div>
@@ -127,9 +127,12 @@
                                 Import Excel
                             </a>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <a href="{{ route('boesl.applicants.index') }}" class="block w-full py-3 px-4 bg-white text-blue-600 font-bold rounded-xl text-center hover:bg-blue-50 transition-colors">
+                                Manage Applicants
+                            </a>
                         <h4 class="text-sm font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">Recent Activity Log</h4>
                         <div class="space-y-4">
                             <!-- Placeholder for actual activity -->

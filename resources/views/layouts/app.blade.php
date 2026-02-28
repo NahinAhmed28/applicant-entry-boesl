@@ -120,6 +120,73 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
+                        @if(auth()->user()->hasAnyRole(['bhc-admin', 'super-admin']))
+                            <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" class="relative p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors group focus:outline-none" title="Notifications">
+                                    <svg class="h-6 w-6 transition-colors" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                                    </svg>
+                                    @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+                                    @if($unreadCount > 0)
+                                        <span class="absolute top-1 right-1 h-4 w-4 bg-red-600 text-white text-[9px] flex items-center justify-center rounded-full font-bold shadow-sm ring-2 ring-white">
+                                            {{ $unreadCount }}
+                                        </span>
+                                    @endif
+                                </button>
+
+                                <div 
+                                    x-show="open" 
+                                    @click.away="open = false" 
+                                    x-cloak 
+                                    x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50 ring-1 ring-black ring-opacity-5"
+                                >
+                                    <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                                        <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Notifications</span>
+                                        @if($unreadCount > 0)
+                                            <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] rounded-full font-bold">{{ $unreadCount }} New</span>
+                                        @endif
+                                    </div>
+                                    <div class="max-h-[28rem] overflow-y-auto">
+                                        @forelse(auth()->user()->unreadNotifications as $notification)
+                                            <form action="{{ route('notifications.read', $notification->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="w-full text-left px-4 py-3.5 hover:bg-slate-50 border-b border-slate-50 flex gap-4 transition-colors">
+                                                    <div class="h-10 w-10 rounded-full bg-indigo-100 flex-shrink-0 flex items-center justify-center text-indigo-600 shadow-sm">
+                                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                        </svg>
+                                                    </div>
+                                                    <div class="min-w-0">
+                                                        <div class="text-xs font-bold text-slate-900 truncate">{{ $notification->data['applicant_name'] ?? 'Applicant Update' }}</div>
+                                                        <div class="text-[11px] text-slate-600 leading-relaxed mt-0.5 line-clamp-2">{{ $notification->data['message'] }}</div>
+                                                        <div class="flex items-center gap-1.5 mt-2">
+                                                            <div class="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+                                                            <div class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{{ $notification->created_at->diffForHumans() }}</div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </form>
+                                        @empty
+                                            <div class="px-6 py-12 text-center">
+                                                <div class="mx-auto h-12 w-12 text-slate-200 mb-3">
+                                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
+                                                </div>
+                                                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">No unread notifications</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                    @if(auth()->user()->notifications->count() > 0)
+                                        <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-100 text-center">
+                                            <a href="#" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-widest">View All Past Notifications</a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="hidden sm:block text-sm text-slate-500 font-medium">{{ auth()->user()->name }}</div>
                         <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs uppercase">
                             {{ substr(auth()->user()->name, 0, 1) }}

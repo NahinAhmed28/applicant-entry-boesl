@@ -148,6 +148,32 @@ class ApplicantsSeeder extends Seeder
                 'status' => 'insurance_received',
                 'created_by' => $boeslAdmin?->id,
             ],
+            [
+                'bhc_no' => 'BHC-TEST-3M',
+                'applicant_name' => 'Test 3 Month Reminder',
+                'passport_no' => 'T3M000000',
+                'phone_number' => '+673 7000003',
+                'agency_name' => 'Test Agency',
+                'company_name' => 'Test Company',
+                'registration_no' => 'REG-TEST-3M',
+                'flight_date' => now()->subMonths(4),
+                'registered_at' => now()->subMonths(3), // Exact 3 months ago
+                'status' => 'registered',
+                'created_by' => $boeslAdmin?->id,
+            ],
+            [
+                'bhc_no' => 'BHC-TEST-6M',
+                'applicant_name' => 'Test 6 Month Reminder',
+                'passport_no' => 'T6M000000',
+                'phone_number' => '+673 7000006',
+                'agency_name' => 'Test Agency',
+                'company_name' => 'Test Company',
+                'registration_no' => 'REG-TEST-6M',
+                'flight_date' => now()->subMonths(7),
+                'registered_at' => now()->subMonths(6), // Exact 6 months ago
+                'status' => 'registered',
+                'created_by' => $boeslAdmin?->id,
+            ],
         ];
 
         foreach ($applicantsData as $data) {
