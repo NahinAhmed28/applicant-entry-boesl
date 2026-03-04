@@ -6,8 +6,9 @@ use App\Models\Applicant;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
-class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation
+class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
     /**
     * @param array $row
@@ -58,7 +59,7 @@ class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation
         return [
             'bhc_no' => 'required|string',
             'applicant_name' => 'required|string',
-            'passport_no' => 'required|string',
+            'passport_no' => 'required|string|unique:applicants,passport_no',
             'agency_name' => 'required|string',
             'company_name' => 'required|string',
             'flight_date_y_m_d' => [
@@ -95,5 +96,17 @@ class ApplicantsImport implements ToModel, WithHeadingRow, WithValidation
         }
         
         return $data;
+    }
+
+    public function customValidationMessages()
+    {
+        return [
+            'passport_no.unique' => 'The passport number :input has already been entered.',
+        ];
+    }
+
+    public function isEmpty(array $row): bool
+    {
+        return empty(array_filter($row));
     }
 }

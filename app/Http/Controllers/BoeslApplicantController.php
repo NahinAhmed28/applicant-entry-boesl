@@ -54,10 +54,12 @@ class BoeslApplicantController extends Controller
         $validated = $request->validate([
             'bhc_no' => 'required|string',
             'applicant_name' => 'required|string',
-            'passport_no' => 'required|string',
+            'passport_no' => 'required|string|unique:applicants,passport_no',
             'agency_name' => 'required|string',
             'company_name' => 'required|string',
             'flight_date' => 'required|date',
+        ], [
+            'passport_no.unique' => 'The passport number :input has already been entered.',
         ]);
 
         $applicant = Applicant::create(array_merge($validated, [
